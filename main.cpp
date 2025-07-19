@@ -19,7 +19,6 @@ int main()
     //must have movable/copiable constructor to work on threads
     dsServer server(std::ref(mutex), std::ref(tableOfProposed), std::ref(tableOfAlived));
     std::thread t1(server);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
     std::thread t2(client);
 
     t1.join();

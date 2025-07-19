@@ -13,7 +13,13 @@ class dsServer
 {
 public:
 
-    dsServer(std::mutex& mutex, tableOfMessages& table_of_proposed, tableOfMessages& table_of_alived);
+    /*!
+    * Parameterized Constructor to allow sharing mutex and tables of proposed values and hosts alive
+    * @param  mutex The mutex shared with server class
+    * @param  table_of_proposed Table of values proposed by the group of host alive in the system
+    * @param  table_of_alived Table of hosts alive
+    */
+    dsServer(std::mutex& mutex, tableOfMessages& table_of_proposed, tableOfMessages& table_of_alive);
     ~dsServer() = default;
 
     //used for threading
@@ -24,7 +30,7 @@ private:
     // A std::vector object that eventually will contain messages proposed by all hosts
     // that was able to send their set of proposed messages
     tableOfMessages _tableOfProposed;
-    tableOfMessages _tableOfAlived;
+    tableOfMessages _tableOfAlive;
 
     std::set<neighborID> neighbors;
 
