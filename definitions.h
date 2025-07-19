@@ -12,6 +12,7 @@
 #include <string>
 
 
+
 using uuidHostId   = boost::uuids::uuid;
 using contentType  = int;
 constexpr  boost::asio::ip::port_type serverPortNumber = 50130; // server listen on this port
@@ -27,18 +28,18 @@ using neighborID = boost::asio::ip::port_type;
 struct messageCore
 {
     std::string  memberIpAdrress;
-    neighborID   port;  // used at first glance just to simulate the algorithm with many processes in
+    neighborID   port;  // used at first glance as ID to simulate the algorithm with many processes in
                         // one host. So the port serves to identify the processes
-    uuidHostId   uuidMembertId;
+    uuidHostId   uuidMemberId;
     contentType  contentReceived;
 };
 //For distributed system simulation in a unique host
 
 // A set of messages proposed by the hosts in the distributed system
 // It contains the id of the host whom transmited the message and content proposed by it
-using messageMap = std::multimap<neighborID,struct messageCore>;
+using tableOfMessages = std::multimap<neighborID,struct messageCore>;
 
-constexpr  size_t      bufferSize   = sizeof(messageMap) * numberOfHosts;
+constexpr  size_t      bufferSize   = sizeof(tableOfMessages) * numberOfHosts;
 constexpr  contentType invalidValue = -1;
 
 #endif //DEFINITIONS_H

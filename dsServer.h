@@ -13,24 +13,24 @@ class dsServer
 {
 public:
 
-    dsServer();
-    ~dsServer();
+    dsServer(std::mutex& mutex, tableOfMessages& table_of_proposed, tableOfMessages& table_of_alived);
+    ~dsServer() = default;
 
     //used for threading
     void operator()() const;
 
-    void listen();
 private:
 
-    inline void deliver();
     // A std::vector object that eventually will contain messages proposed by all hosts
     // that was able to send their set of proposed messages
-    messageMap mapOfMessagesProposed;
+    tableOfMessages _tableOfProposed;
+    tableOfMessages _tableOfAlived;
+
     std::set<neighborID> neighbors;
 
     //To protect valuesReceived from race conditions
-    mutable char buffer[bufferSize];
-
+    //mutable char buffer[bufferSize];
+    std::mutex& _mutex;
 
 };
 

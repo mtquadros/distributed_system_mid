@@ -46,7 +46,6 @@ void dsServer::operator()() const
             std::cout << "\nRecebido de " << remetente.address().to_string()
                       << ":" << remetente.port()
                       << " => " << std::string(buffer, bytes) << "\n";
-
         }
 
     } catch (std::exception& e) {
@@ -54,21 +53,13 @@ void dsServer::operator()() const
     }
 }
 
-dsServer::dsServer()
+
+dsServer::dsServer(std::mutex& mutex, tableOfMessages& table_of_proposed, tableOfMessages& table_of_alived): _mutex(mutex),
+                _tableOfProposed(table_of_proposed), _tableOfAlived((table_of_alived))
 {
 
 }
 
-dsServer::~dsServer()
-{
-}
 
-void dsServer::listen()
-{
 
-}
 
-void dsServer::deliver()
-{
-
-}
