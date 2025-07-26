@@ -12,11 +12,12 @@
 
 using namespace boost::asio::ip;
 
-/*
+/*!
  * Parameterized Constructor to allow sharing mutex and tables of proposed values and host alived
  * @param - mutex shared with server class
  *        - table of values proposed by the group of host alive in the system
  *        - table of host alive
+ */
 dsClient::dsClient(std::mutex& mutex, tableOfMessages& table_of_proposed, tableOfMessages& table_of_alived): _mutex(mutex),
                 _tableOfProposed(table_of_proposed), _tableOfAlived((table_of_alived))
 {
