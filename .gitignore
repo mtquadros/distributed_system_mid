@@ -1,3 +1,6 @@
 
+# Ignorar configurações da IDE JetBrains
+.idea/
 
-
+# Ignorar diretório de build do CMake (modo debug)
+cmake-build-debug/
