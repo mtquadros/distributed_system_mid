@@ -5,16 +5,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(PNAME dsmodule)
 set(BOOST_DIR /home/dev/Projects/boost_1_85_0)
 
-add_executable(${PNAME} main.cpp)
-
+include_directories(${BOOST_DIR})
+add_executable(${PNAME} main.cpp dsServer.cpp dsClient.cpp printTable.cpp)
 
 target_include_directories(${PNAME} PUBLIC ${BOOST_DIR})
-target_include_directories(${PNAME} PUBLIC ./)
+target_include_directories(${PNAME} PUBLIC /home/dev/Projects/distributed_consensus/)
 
-add_library(dslib STATIC dsClient.cpp dsServer.cpp dsClient.cpp)
+#add_library(dslib STATIC dsServer.cpp dsClient.cpp)
+#
+#target_include_directories(dslib PUBLIC ${BOOST_DIR})
 
-target_include_directories(dslib PUBLIC ${BOOST_DIR})
+#target_link_libraries(${PNAME} dslib)
 
-target_link_libraries(${PNAME} dslib)
 
 
