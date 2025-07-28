@@ -2,60 +2,90 @@
 // Created by dev on 05/07/25.
 //
 
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/map.hpp>
 #include <sstream>
 #include <iostream>
 #include <string>
 #include <thread>
-#include <shared_mutex>
+#include <mutex>
 #include "dsServer.h"
-#include <memory>
 #include <boost/asio.hpp>
+#include <boost/asio/ip/multicast.hpp>
 #include "definitions.h"
-
+#include <cassert>
 using boost::asio::ip::udp;
 
-void dsServer::operator()() const
+void dsServer::operator()()
 {
     try {
-        boost::asio::io_context io;
+        boost::asio::io_context context;
 
-        // Cria um endpoint local na porta 30000
-        udp::endpoint listen_endpoint(udp::v4(), serverPortNumber);
+        udp::socket socket(context);
 
-        // Abre o socket
-        udp::socket socket(io);
-        socket.open(listen_endpoint.protocol());
+        socket.open(udp::v4());
 
-        // Permite reuso de endereço para evitar erro "address already in use"
-        socket.set_option(boost::asio::socket_base::reuse_address(true));
-
-        // Liga o socket ao endpoint
+        udp::endpoint listen_endpoint(udp::v4(),heartBeat::serverPortNumber);
+        socket.set_option(udp::socket::reuse_address(true));
         socket.bind(listen_endpoint);
 
-        std::cout << "Servidor aguardando mensagens broadcast na porta " <<  serverPortNumber << "...\n";
 
-        // Buffer para receber dados
-        char buffer[1024];
-        udp::endpoint remetente;
+        socket.set_option(boost::asio::ip::multicast::join_group(
+        boost::asio::ip::make_address(heartBeat::localHostsGroupIp)));
 
+
+        /*! Junta-se ao grupo multicast definido pelo ip multicast e porta (aleatória disponível)
+         *  TODO: Criar um meio de comunicação em outra porta pré-determinada para troca de valores propostos
+         *  TODO: Criar uma porta pré-determinada de servidor para multicast
+         */
+
+
+        std::cout << "Servidor ouvindo multicast..." << std::endl;
+
+        // Cria uma string para ser utilizada como buffer pelo socket
+        std::array<char, heartBeat::buffer_size> buffer;
+        udp::endpoint sender_endpoint;
         while (true) {
-            //size_t bytes = socket.receive_from(boost::asio::buffer(buffer), remetente);
-            size_t bytes = socket.receive(boost::asio::buffer(buffer));
-            std::cout << "\nRecebido de " << remetente.address().to_string()
-                      << ":" << remetente.port()
-                      << " => " << std::string(buffer, bytes) << "\n";
-        }
+            buffer.fill(0);
+            size_t bytes_received = socket.receive_from(boost::asio::buffer(buffer),sender_endpoint);
 
+            // Transforma dados brutos em input string stream
+            std::string data(buffer.data(), bytes_received);
+            std::istringstream iss(data);
+
+            heartBeat::memberID member_id;
+            heartBeat::timestamp_t timestamp;
+            heartBeat::controlFlag ctrlFlag;
+
+            iss >> member_id;
+            iss >> timestamp;
+            iss >> ctrlFlag;
+
+            {
+                std::lock_guard<std::mutex> lock(_mutex);
+                std::cout << "++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+                std::cout << "Server receiving from: " << sender_endpoint << std::endl;
+                std::cout << "Bytes Received: " << bytes_received << std::endl;
+                std::cout <<  member_id << std::endl;
+                std::cout << timestamp << std::endl;
+                std::cout << ctrlFlag << std::endl;
+                std::cout << "++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+                //std::chrono::local_t time_stamp;
+            }
+
+            //std::unique_lock<std::mutex> lock(_mutex);
+            // --- update the table -------------------------------------------
+            //heartBeat::tblOfBeats& beats = _tableOfAlive[id.c_str()];
+            // ctrlFlag was design to provided some autenticity
+            //beats.emplace(timeToken, ctrlFlag);
+            //_mutex.unlock();
+            // -----------------------------------------------------------------
+        }
     } catch (std::exception& e) {
-        std::cerr << "\nErro: " << e.what() << "\n";
+        std::cerr << "\nSERVER Erro: " << e.what() << "\n";
     }
 }
 
-
-dsServer::dsServer(std::mutex& mutex, tableOfMessages& table_of_proposed, tableOfMessages& table_of_alived): _mutex(mutex),
-                _tableOfProposed(table_of_proposed), _tableOfAlived((table_of_alived))
+dsServer::dsServer(heartBeat::memberID& member, std::mutex& mutex, heartBeat::tblOfAlive& table_of_alive):
+                _myID(member), _mutex(mutex), _tableOfAlive(table_of_alive)
 {
 
 }
