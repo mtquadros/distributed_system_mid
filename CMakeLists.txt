@@ -6,7 +6,7 @@ set(PNAME dsmodule)
 set(BOOST_DIR /home/dev/Projects/boost_1_85_0)
 
 include_directories(${BOOST_DIR})
-add_executable(${PNAME} main.cpp dsServer.cpp dsClient.cpp printTable.cpp)
+add_executable(${PNAME} main.cpp dsServer.cpp dsClient.cpp manageTable.cpp)
 
 target_include_directories(${PNAME} PUBLIC ${BOOST_DIR})
 target_include_directories(${PNAME} PUBLIC /home/dev/Projects/distributed_consensus/)

@@ -10,11 +10,15 @@
 
 using namespace boost::asio::ip;
 
-
+dsClient::dsClient(std::mutex& mutex):_mutex(mutex)
 {
         //parameterized constructor
 }
 
+/*!
+ * TODO: Check all the code to eval if there are a set of instructions that must execute atomic
+ * (i.e.) without be preempted by operating system
+ */
 void dsClient::operator()()
 {
     try {
@@ -26,47 +30,34 @@ void dsClient::operator()()
 
         udp::endpoint multicast_endpoint(address::from_string(heartBeat::localHostsGroupIp),
                 heartBeat::serverPortNumber);
+        udp::endpoint local_endpoint(udp::v4(), 0); //creates a localendpoint with port = 0
+        socket.bind(local_endpoint);  //forces to define a port on the before call send_to member function
 
-        //Defines the ID of the host in the distributed system platform
-        {
-            std::lock_guard<std::mutex> lock1(_mutex);
-            _myID = std::to_string(multicast_endpoint.port());
-        }
         std::string buffer;
         while (true)
         {
-            //buffer.resize(heartBeat::buffer_size);
-            std::ostringstream oss;  // Nao tem tamanho pre-definido, primeiro se escreve nele, depois coloca em um beffer
-            // prepare the timestamp format
+            std::ostringstream oss;
+
             // Obtem timestamp como número de milissegundos desde epoch
             auto now = std::chrono::high_resolution_clock::now();
-            auto time_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+            auto time_stamp = std::chrono::duration_cast<std::chrono::seconds>(
                               now.time_since_epoch()).count();
-            // put the data in the output stream ------------------------------------------
-            {
-                std::lock_guard<std::mutex> lock(_mutex);
-                oss << _myID << " ";
-            }
 
-            oss << time_stamp << " " << heartBeat::flag << " ";
-            {
-                std::lock_guard<std::mutex> lock(_mutex);
-                std::cout << "--------------------------------------------------" << std::endl;
-                std::cout << "Cliente [ " << socket.local_endpoint() << " ] enviando :" << std::endl;
-                std::cout << _myID << std::endl;
-                std::cout << time_stamp  << std::endl;
-                std::cout << heartBeat::flag << std::endl;
-                std::cout << "--------------------------------------------------" << std::endl;
-            }
+            std::time_t t = static_cast<std::time_t>(time_stamp);
+
+            heartBeat::memberID id = std::to_string(socket.local_endpoint().port());
+            // put the data in the output stream ------------------------------------------
+
+            oss << id << ' ';
+            oss << std::put_time(std::localtime(&t), "%Y-%m-%d__%H:%M:%S") << ' ';
             // escreve no buffer o conteudo do stream
             buffer.clear();
-            buffer += oss.str();
-            // send the raw data --------------------------------
+            buffer.append(oss.str());
+            // send the raw data (it is a blocking mode)--MTU limits to 1472 bytes of payload--
             socket.send_to(boost::asio::buffer(buffer), multicast_endpoint);
 
             // Wait for period between heartbeats
             std::this_thread::sleep_for(heartBeat::periodMillisecs);
-
         }
 
     } catch (std::exception& e) {

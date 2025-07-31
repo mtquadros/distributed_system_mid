@@ -21,15 +21,15 @@ class dsClient
     * @param  table_of_proposed Table of values proposed by the group of host alive in the system
     * @param  table_of_alived Table of hosts alive
     */
-    dsClient(heartBeat::memberID& member, std::mutex& mutex, heartBeat::tblOfAlive& table_of_alive);
+    dsClient(std::mutex& mutex);
 
     void operator()();
 
     //protected members
     protected:
-    std::mutex& _mutex;
-    heartBeat::tblOfAlive& _tableOfAlive;
     heartBeat::memberID _myID;
+    std::mutex& _mutex;
+
 }; //class dsClient
 
 

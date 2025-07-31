@@ -11,83 +11,68 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ip/multicast.hpp>
 #include "definitions.h"
-#include <cassert>
+
 using boost::asio::ip::udp;
 
 void dsServer::operator()()
 {
-    try {
+    try
+    {
         boost::asio::io_context context;
 
         udp::socket socket(context);
 
         socket.open(udp::v4());
 
-        udp::endpoint listen_endpoint(udp::v4(),heartBeat::serverPortNumber);
+        udp::endpoint listen_endpoint(udp::v4(), heartBeat::serverPortNumber);
         socket.set_option(udp::socket::reuse_address(true));
         socket.bind(listen_endpoint);
 
-
         socket.set_option(boost::asio::ip::multicast::join_group(
-        boost::asio::ip::make_address(heartBeat::localHostsGroupIp)));
-
+            boost::asio::ip::make_address(heartBeat::localHostsGroupIp)));
 
         /*! Junta-se ao grupo multicast definido pelo ip multicast e porta (aleatória disponível)
          *  TODO: Criar um meio de comunicação em outra porta pré-determinada para troca de valores propostos
          *  TODO: Criar uma porta pré-determinada de servidor para multicast
          */
 
-
-        std::cout << "Servidor ouvindo multicast..." << std::endl;
-
         // Cria uma string para ser utilizada como buffer pelo socket
         std::array<char, heartBeat::buffer_size> buffer;
         udp::endpoint sender_endpoint;
-        while (true) {
+        while (true)
+        {
             buffer.fill(0);
-            size_t bytes_received = socket.receive_from(boost::asio::buffer(buffer),sender_endpoint);
-
+            size_t bytes_received = socket.receive_from(boost::asio::buffer(buffer), sender_endpoint);
             // Transforma dados brutos em input string stream
-            std::string data(buffer.data(), bytes_received);
-            std::istringstream iss(data);
 
-            heartBeat::memberID member_id;
-            heartBeat::timestamp_t timestamp;
-            heartBeat::controlFlag ctrlFlag;
+            heartBeat::memberID    member_id;
+            std::string timestamp_str;
 
-            iss >> member_id;
-            iss >> timestamp;
-            iss >> ctrlFlag;
-
+            /*
+             * DEBUG: TEST PASSED: The information is coming correctly until here
+             */
             {
                 std::lock_guard<std::mutex> lock(_mutex);
-                std::cout << "++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-                std::cout << "Server receiving from: " << sender_endpoint << std::endl;
-                std::cout << "Bytes Received: " << bytes_received << std::endl;
-                std::cout <<  member_id << std::endl;
-                std::cout << timestamp << std::endl;
-                std::cout << ctrlFlag << std::endl;
-                std::cout << "++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-                //std::chrono::local_t time_stamp;
-            }
+                std::string data(buffer.data(), bytes_received);
+                std::istringstream iss(data);
+                std::getline(iss, member_id, ' ');
+                std::getline(iss, timestamp_str, ' ');
 
-            //std::unique_lock<std::mutex> lock(_mutex);
-            // --- update the table -------------------------------------------
-            //heartBeat::tblOfBeats& beats = _tableOfAlive[id.c_str()];
-            // ctrlFlag was design to provided some autenticity
-            //beats.emplace(timeToken, ctrlFlag);
-            //_mutex.unlock();
+                _tableOfAlive[member_id] = timestamp_str;
+            }
             // -----------------------------------------------------------------
         }
-    } catch (std::exception& e) {
+    }
+    catch (std::exception& e)
+    {
         std::cerr << "\nSERVER Erro: " << e.what() << "\n";
+        showpos(std::cerr);
     }
 }
 
 dsServer::dsServer(heartBeat::memberID& member, std::mutex& mutex, heartBeat::tblOfAlive& table_of_alive):
-                _myID(member), _mutex(mutex), _tableOfAlive(table_of_alive)
+    _myID(member), _mutex(mutex), _tableOfAlive(table_of_alive)
 {
-
 }
 
 

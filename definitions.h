@@ -41,7 +41,7 @@ namespace heartBeat
 #    error "Missing #define REMOTE_DISTRIBUTED_SYSTEM directive to true or false"
 #endif
 
-    using timestamp_t  = std::time_t;
+    using timestamp_t  = std::string;
 
     using controlFlag   = int64_t;
 
@@ -50,9 +50,9 @@ namespace heartBeat
     constexpr uint8_t buffer_size = 128;
     // ---------------------------------------------------------------------------
     using tblOfBeats  = std::multimap<timestamp_t, controlFlag>;
-    using tblOfAlive  = std::map<neighborID, tblOfBeats>;
+    using tblOfAlive  = std::map<neighborID, timestamp_t>;
     //-----------------------------------------------------------------------------
-    using rowOfAlive  = std::pair<neighborID, tblOfBeats>;
+    using rowOfAlive  = std::pair<neighborID, timestamp_t>;
     using rowOfBeats  = std::pair<timestamp_t, controlFlag>;
 
     constexpr  std::chrono::milliseconds  periodMillisecs(3000);

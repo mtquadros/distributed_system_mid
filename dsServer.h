@@ -26,7 +26,8 @@ public:
 
 private:
     heartBeat::memberID& _myID;
-    heartBeat::tblOfAlive _tableOfAlive;
+    heartBeat::tblOfAlive& _tableOfAlive;
+
 
     //To protect valuesReceived from race conditions
     std::mutex& _mutex;
