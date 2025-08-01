@@ -1,5 +1,5 @@
 # distributed_system_mid
-A liteweight distributed System Middleware designed to be byzantine and crash fault tolerant.
+A liteweight distributed System Middleware designed to be crash fault tolerant.
 
 ## Notes:
 1. At the moment this is working just with threads simulating hosts.
