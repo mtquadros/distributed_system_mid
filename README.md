@@ -11,4 +11,13 @@ A liteweight distributed System Middleware designed to be crash fault tolerant.
 2. Correct the manner the timestamp is collected;
 3. Decide about a leader on group even if the actual leader crashes.
 
-
+## How to run it?
+1. Compile the program:
+   ...
+   1. *cd {$project_directory}/distributed_consensus/cmake-build-debug*
+   ...
+   ...
+   2. *cmake .. && make*
+   ...
+2. Open two or more terminals (terminator application helps a lot!)
+3. type on each terminal: *./dsmodule* 
