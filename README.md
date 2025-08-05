@@ -2,11 +2,11 @@
 A liteweight distributed System plataform
 
 ## Notes: Features until the moment,
-1. It is working just with threads simulating hosts;
-2. The host joing to the group by multicasting communication;
-3. It is detecting crashed threads;
+1. It is working with threads simulating hosts;
+2. All neighbors hosts connected to the same local network which run this module joing to the group by multicasting communication;
+3. It is detecting crash fault of threads;
 4. It shows up threads joined to the group in a table on the screen;
-5. Updates the the timestamp of the last heart beat of a host.
+5. Updates the the timestamp of the last heart beat of the hosts.
 
 ## Work in progress,
 1. Improve the information on the screen (i.e add the column "is alive");
