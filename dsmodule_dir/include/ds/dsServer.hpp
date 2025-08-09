@@ -6,7 +6,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "definitions.h"
+#include <ds/definitions.hpp>
 #include <mutex>
 
 class dsServer

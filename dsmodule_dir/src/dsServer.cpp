@@ -7,10 +7,10 @@
 #include <string>
 #include <thread>
 #include <mutex>
-#include "dsServer.h"
+#include <ds/dsServer.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/ip/multicast.hpp>
-#include "definitions.h"
+#include <ds/definitions.hpp>
 
 using boost::asio::ip::udp;
 

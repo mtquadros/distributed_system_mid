@@ -2,8 +2,8 @@
 // Created by dev on 14/07/25.
 //
 
-#include "dsClient.h"
-#include "definitions.h"
+#include <ds/dsClient.hpp>
+#include <ds/dsServer.hpp>
 #include <iostream>
 #include <boost/asio.hpp>
 #include <mutex>
@@ -28,7 +28,7 @@ void dsClient::operator()()
         udp::socket socket(io);
         socket.open(udp::v4());
 
-        udp::endpoint multicast_endpoint(address::from_string(heartBeat::localHostsGroupIp),
+        udp::endpoint multicast_endpoint(make_address(heartBeat::localHostsGroupIp),
                 heartBeat::serverPortNumber);
         udp::endpoint local_endpoint(udp::v4(), 0); //creates a localendpoint with port = 0
         socket.bind(local_endpoint);  //forces to define a port on the before call send_to member function

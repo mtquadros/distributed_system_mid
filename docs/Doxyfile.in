@@ -1,0 +1,48 @@
+# --- Básico ---
+PROJECT_NAME           = "@PROJECT_NAME@"
+PROJECT_NUMBER         = "@PROJECT_VERSION@"
+OUTPUT_DIRECTORY       = "@CMAKE_CURRENT_BINARY_DIR@/docs"
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+QUIET                  = YES
+
+# --- Onde procurar o código ---
+INPUT                  = "@CMAKE_SOURCE_DIR@/dsmodule_dir/include" "@CMAKE_SOURCE_DIR@/dsmodule_dir/src" "@CMAKE_SOURCE_DIR@/README.md"
+FILE_PATTERNS          = *.h *.hpp *.hh *.hxx *.c *.cc *.cpp *.cxx *.md
+RECURSIVE              = YES
+
+# --- Idioma / codificação ---
+OUTPUT_LANGUAGE        = English
+INPUT_ENCODING         = UTF-8
+
+# --- Index/agrupamento ---
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+EXTRACT_LOCAL_CLASSES  = YES
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+OPTIMIZE_FOR_FORTRAN   = NO
+OPTIMIZE_OUTPUT_VHDL   = NO
+
+# --- Comentários em Markdown ---
+MARKDOWN_SUPPORT       = YES
+USE_MDFILE_AS_MAINPAGE = "@CMAKE_SOURCE_DIR@/README.md"
+
+# --- Diagramas (requer graphviz) ---
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 0
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+CLASS_DIAGRAMS         = YES
+DOT_IMAGE_FORMAT       = svg
+INTERACTIVE_SVG        = YES
+
+# --- Filtros de ruído ---
+EXCLUDE_PATTERNS       = */tests/* */build/*
+
+# --- Tuning C++ moderno ---
+JAVADOC_AUTOBRIEF      = YES
+INLINE_SOURCES         = NO
+SOURCE_BROWSER         = NO
+GENERATE_TREEVIEW      = YES

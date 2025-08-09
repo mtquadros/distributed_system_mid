@@ -2,10 +2,10 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include "dsClient.h"
-#include "dsServer.h"
-#include "definitions.h"
-#include "manageTable.h"
+#include <ds/dsClient.hpp>
+#include <ds/dsServer.hpp>
+#include <ds/definitions.hpp>
+#include <ds/manageTable.hpp>
 
 
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
