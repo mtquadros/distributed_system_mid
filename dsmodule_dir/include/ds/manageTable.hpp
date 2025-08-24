@@ -6,16 +6,17 @@
 #define MANAGETABLE_H
 
 #include <ds/definitions.hpp>
+#include <shared_mutex>
 
 class manageTable
 {
 public:
-    manageTable(std::mutex& mutex, HB::tblOfAlive& table_of_alive): _mutex(mutex), _tableOfAlive(table_of_alive){}
+    manageTable(std::shared_mutex& mutex, HB::tblOfAlive& table_of_alive): _mutex(mutex), _tableOfAlive(table_of_alive){}
     ~manageTable() = default;
     void operator()();
 
 private:
-    std::mutex& _mutex;
+    std::shared_mutex& _mutex;
     HB::tblOfAlive& _tableOfAlive;
     inline void print_header(const std::string& col1, const std::string& col2);
     inline void print_row(const std::string& col1, const HB::timestamp_t& time);

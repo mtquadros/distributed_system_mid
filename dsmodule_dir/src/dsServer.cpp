@@ -38,6 +38,7 @@ void dsServer::operator()()
          */
 
         // Cria uma string para ser utilizada como buffer pelo socket
+        // TODO: Replace array by std::string
         std::array<char, HB::buffer_size> buffer;
         udp::endpoint sender_endpoint;
         while (true)
@@ -50,13 +51,13 @@ void dsServer::operator()()
             /*
              * DEBUG: TEST PASSED: The information is coming correctly until here
              */
-            {
-                std::lock_guard<std::mutex> lock(_mutex);
+
                 std::string data(buffer.data(), bytes_received);
                 std::istringstream iss(data);
                 iss >> heartbeat;
+                std::unique_lock<std::shared_mutex> write(_mutex);
                 _tableOfAlive[heartbeat.getMemberID()] = heartbeat.getTimeStamp();
-            }
+                write.unlock();
             // -----------------------------------------------------------------
         }
     }
@@ -67,7 +68,7 @@ void dsServer::operator()()
     }
 }
 
-dsServer::dsServer(HB::memberID& member, std::mutex& mutex, HB::tblOfAlive& table_of_alive):
+dsServer::dsServer(HB::memberID& member, std::shared_mutex& mutex, HB::tblOfAlive& table_of_alive):
     _myID(member), _mutex(mutex), _tableOfAlive(table_of_alive)
 {
 }

@@ -5,7 +5,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 #include <ds/definitions.hpp>
-#include <mutex>
+#include <shared_mutex>
 #include <random>
 
 
@@ -22,14 +22,13 @@ class dsClient
     public:
     ~dsClient() = default;
 
-    explicit dsClient(std::mutex& mutex);
+    explicit dsClient(HB::memberID& id): _myID(id){ };
 
     void operator()();
 
     //protected members
     protected:
     HB::memberID _myID;
-    std::mutex& _mutex;
 
 }; //class dsClient
 

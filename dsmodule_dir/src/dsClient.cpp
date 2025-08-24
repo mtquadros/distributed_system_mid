@@ -13,11 +13,6 @@
 
 using namespace boost::asio::ip;
 
-dsClient::dsClient(std::mutex& mutex):_mutex(mutex)
-{
-        //parameterized constructor
-}
-
 /*!
  * TODO: Check all the code to eval if there are a set of instructions that must execute atomic
  * (i.e.) without be preempted by operating system
@@ -54,7 +49,7 @@ void dsClient::operator()()
             // escreve no buffer o conteudo do stream
             buffer.clear();
             std::ostringstream oss;
-            oss << std::this_thread::get_id();
+            oss << _myID;
             buffer.append(oss.str());
             // send the raw data (it is a blocking mode)--MTU limits to 1472 bytes of payload--
             socket.send_to(boost::asio::buffer(buffer), multicast_endpoint);

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ds/manageTable.hpp>
-#include <mutex>
+#include <shared_mutex>
 #include <chrono>
 #include <ctime>
 
@@ -19,7 +19,6 @@ void manageTable::operator()()
         {
             col = 2;
             row = 2;
-            std::lock_guard<std::mutex> lock(_mutex);
             hideCursor();
             moveCursor(col,row);
             print_separator();
@@ -33,13 +32,15 @@ void manageTable::operator()()
             {
                 // Dados
                 //print_row(std::to_string(++counter), vec[counter]);
+                std::shared_lock<std::shared_mutex> read(_mutex);
                 print_row(item.first, item.second);
+                read.unlock();
                 moveCursor(col,++row);
                 print_separator();
                 moveCursor(col,++row);
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         showCursor();
     }
 }

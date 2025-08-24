@@ -1,6 +1,6 @@
 #include <cstring>
 #include <iostream>
-#include <mutex>
+#include <shared_mutex>
 #include <thread>
 #include <ds/dsClient.hpp>
 #include <ds/dsServer.hpp>
@@ -15,16 +15,20 @@
 int main()
 {
     std::setlocale(LC_ALL, "pt_BR.UTF_8");
-    std::mutex mutex;
+    std::shared_mutex mutex;
     HB::tblOfAlive tbl_of_alive;
     HB::memberID myMemberID;
+
+    std::ostringstream oss;
+    oss << std::this_thread::get_id();
+    myMemberID = oss.str();
 
     manageTable printer(mutex, tbl_of_alive);
     //must have movable/copiable constructor to work on threads
     dsServer server(myMemberID, mutex, tbl_of_alive);
 
     //must have movable/copiable constructor to work on threads
-    dsClient client(mutex);
+    dsClient client(myMemberID);
 
 
     std::thread t1(server);

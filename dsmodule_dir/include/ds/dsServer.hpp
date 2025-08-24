@@ -7,7 +7,7 @@
 #define SERVER_H
 
 #include <ds/definitions.hpp>
-#include <mutex>
+#include <shared_mutex>
 
 class dsServer
 {
@@ -18,7 +18,7 @@ public:
     * @param  mutex The mutex shared with server class
     * @param  table_of_alived Table of hosts alive
     */
-    dsServer(HB::memberID& member, std::mutex& mutex, HB::tblOfAlive& table_of_alive);
+    dsServer(HB::memberID& member, std::shared_mutex& mutex, HB::tblOfAlive& table_of_alive);
     ~dsServer() = default;
 
     //! used for threading
@@ -30,7 +30,7 @@ private:
 
 
     //To protect valuesReceived from race conditions
-    std::mutex& _mutex;
+    std::shared_mutex& _mutex;
 
 }; //class dsServer
 
