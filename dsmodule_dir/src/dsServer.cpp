@@ -11,6 +11,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ip/multicast.hpp>
 #include <ds/definitions.hpp>
+#include <ds/heartBeat.hpp>
 
 using boost::asio::ip::udp;
 
@@ -24,12 +25,12 @@ void dsServer::operator()()
 
         socket.open(udp::v4());
 
-        udp::endpoint listen_endpoint(udp::v4(), heartBeat::serverPortNumber);
+        udp::endpoint listen_endpoint(udp::v4(), HB::serverPortNumber);
         socket.set_option(udp::socket::reuse_address(true));
         socket.bind(listen_endpoint);
 
         socket.set_option(boost::asio::ip::multicast::join_group(
-            boost::asio::ip::make_address(heartBeat::localHostsGroupIp)));
+            boost::asio::ip::make_address(HB::localHostsGroupIp)));
 
         /*! Junta-se ao grupo multicast definido pelo ip multicast e porta (aleatória disponível)
          *  TODO: Criar um meio de comunicação em outra porta pré-determinada para troca de valores propostos
@@ -37,7 +38,7 @@ void dsServer::operator()()
          */
 
         // Cria uma string para ser utilizada como buffer pelo socket
-        std::array<char, heartBeat::buffer_size> buffer;
+        std::array<char, HB::buffer_size> buffer;
         udp::endpoint sender_endpoint;
         while (true)
         {
@@ -45,9 +46,7 @@ void dsServer::operator()()
             size_t bytes_received = socket.receive_from(boost::asio::buffer(buffer), sender_endpoint);
             // Transforma dados brutos em input string stream
 
-            heartBeat::memberID    member_id;
-            std::string timestamp_str;
-
+            HeartBeat heartbeat;
             /*
              * DEBUG: TEST PASSED: The information is coming correctly until here
              */
@@ -55,10 +54,8 @@ void dsServer::operator()()
                 std::lock_guard<std::mutex> lock(_mutex);
                 std::string data(buffer.data(), bytes_received);
                 std::istringstream iss(data);
-                std::getline(iss, member_id, ' ');
-                std::getline(iss, timestamp_str, ' ');
-
-                _tableOfAlive[member_id] = timestamp_str;
+                iss >> heartbeat;
+                _tableOfAlive[heartbeat.getMemberID()] = heartbeat.getTimeStamp();
             }
             // -----------------------------------------------------------------
         }
@@ -70,7 +67,7 @@ void dsServer::operator()()
     }
 }
 
-dsServer::dsServer(heartBeat::memberID& member, std::mutex& mutex, heartBeat::tblOfAlive& table_of_alive):
+dsServer::dsServer(HB::memberID& member, std::mutex& mutex, HB::tblOfAlive& table_of_alive):
     _myID(member), _mutex(mutex), _tableOfAlive(table_of_alive)
 {
 }

@@ -19,7 +19,7 @@
  * with many threads, if it is set to true change to remote mode with many host connect by a local network
  */
 #define REMOTE_DISTRIBUTED_SYSTEM  false
-namespace heartBeat
+namespace HB
 {
     //using uuidHostId = boost::uuids::uuid;
     using hostPort   = std::string;
@@ -41,7 +41,7 @@ namespace heartBeat
 #    error "Missing #define REMOTE_DISTRIBUTED_SYSTEM directive to true or false"
 #endif
 
-    using timestamp_t  = std::string;
+    using timestamp_t  = time_t;
 
     using controlFlag   = int64_t;
 

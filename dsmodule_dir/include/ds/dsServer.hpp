@@ -18,15 +18,15 @@ public:
     * @param  mutex The mutex shared with server class
     * @param  table_of_alived Table of hosts alive
     */
-    dsServer(heartBeat::memberID& member, std::mutex& mutex, heartBeat::tblOfAlive& table_of_alive);
+    dsServer(HB::memberID& member, std::mutex& mutex, HB::tblOfAlive& table_of_alive);
     ~dsServer() = default;
 
     //! used for threading
     void operator()();
 
 private:
-    heartBeat::memberID& _myID;
-    heartBeat::tblOfAlive& _tableOfAlive;
+    HB::memberID& _myID;
+    HB::tblOfAlive& _tableOfAlive;
 
 
     //To protect valuesReceived from race conditions

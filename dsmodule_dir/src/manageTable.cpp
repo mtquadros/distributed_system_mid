@@ -50,10 +50,12 @@ void manageTable::print_header(const std::string& col1, const std::string& col2)
         << std::setw(20) << std::left << col2 << " |";
 }
 
-void manageTable::print_row(const std::string& col1, const heartBeat::timestamp_t& time)
+void manageTable::print_row(const std::string& col1, const HB::timestamp_t& time)
 {
+    std::tm* tm = std::localtime(&time);
     std::cout << "| " << std::setw(20) << std::left << col1 << " | "
-        << std::setw(20) << std::left << time << " |" ;
+        << std::setw(20) << std::left <<
+            std::put_time(tm,"%d-%m-%Y  %H:%M:%S") << " |" ;
 }
 
 void manageTable::print_separator()

@@ -6,6 +6,7 @@ target_compile_features(ds_module PUBLIC cxx_std_20)
 target_sources(ds_module PUBLIC src/dsClient.cpp
                                 src/dsServer.cpp
                                 src/manageTable.cpp
+                                src/heartBeat.cpp
 )
 
 set_target_properties(ds_module PROPERTIES

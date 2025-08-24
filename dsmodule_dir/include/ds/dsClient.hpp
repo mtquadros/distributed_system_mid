@@ -28,7 +28,7 @@ class dsClient
 
     //protected members
     protected:
-    heartBeat::memberID _myID;
+    HB::memberID _myID;
     std::mutex& _mutex;
 
 }; //class dsClient

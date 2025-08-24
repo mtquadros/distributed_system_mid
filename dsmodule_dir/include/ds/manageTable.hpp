@@ -10,15 +10,15 @@
 class manageTable
 {
 public:
-    manageTable(std::mutex& mutex, heartBeat::tblOfAlive& table_of_alive): _mutex(mutex), _tableOfAlive(table_of_alive){}
+    manageTable(std::mutex& mutex, HB::tblOfAlive& table_of_alive): _mutex(mutex), _tableOfAlive(table_of_alive){}
     ~manageTable() = default;
     void operator()();
 
 private:
     std::mutex& _mutex;
-    heartBeat::tblOfAlive& _tableOfAlive;
+    HB::tblOfAlive& _tableOfAlive;
     inline void print_header(const std::string& col1, const std::string& col2);
-    inline void print_row(const std::string& col1, const heartBeat::timestamp_t& time);
+    inline void print_row(const std::string& col1, const HB::timestamp_t& time);
     inline void print_separator();
     inline int  countTable();
     inline void moveCursor(int col, int row);
