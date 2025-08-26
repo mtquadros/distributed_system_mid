@@ -11,15 +11,13 @@ set(BOOST_DIR /home/dev/commonlibs/boost_1_88_0)
 add_subdirectory(dsmodule_dir)
 
 add_executable(${PNAME} main.cpp)
-add_executable(main2.out main2.cpp)
 target_link_libraries(${PNAME} ds_module)
-target_link_libraries(main2.out ds_module)
+
 
 # $BOOST_DIR set on top CMakelists.txt
 #target_include_directories(ds_module PUBLIC ${BOOST_DIR})
 
 target_include_directories(${PNAME} PUBLIC dsmodule_dir/include)
-target_include_directories(main2.out PUBLIC dsmodule_dir/include)
 
 install(TARGETS ${PNAME}
     RUNTIME DESTINATION bin)

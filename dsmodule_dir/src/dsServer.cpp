@@ -48,16 +48,12 @@ void dsServer::operator()()
             // Transforma dados brutos em input string stream
 
             HeartBeat heartbeat;
-            /*
-             * DEBUG: TEST PASSED: The information is coming correctly until here
-             */
-
-                std::string data(buffer.data(), bytes_received);
-                std::istringstream iss(data);
-                iss >> heartbeat;
-                std::unique_lock<std::shared_mutex> write(_mutex);
-                _tableOfAlive[heartbeat.getMemberID()] = heartbeat.getTimeStamp();
-                write.unlock();
+            std::string data(buffer.data(), bytes_received);
+            std::istringstream iss(data);
+            iss >> heartbeat;
+            std::unique_lock<std::shared_mutex> write(_mutex);
+           _tableOfAlive[heartbeat.getMemberID()] = heartbeat.getTimeStamp();
+            write.unlock();
             // -----------------------------------------------------------------
         }
     }

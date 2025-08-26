@@ -38,20 +38,6 @@ int main()
     t1.join();
     t2.join();
     t3.join();
-/*  std::string id("876");
-    HeartBeat heartBeat1{id};
-    const HB::timestamp_t ts1 = heartBeat1.getTimeStamp();
-    std::tm* tmp = std::localtime(&ts1);
-    std::cout << heartBeat1.getMemberID() << "  " << std::put_time(tmp,"%d-%m-%Y < %H:%M:%S >") << std::endl;
 
-    std::stringstream ss;
-    ss << heartBeat1;
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-    HeartBeat heartBeat2{};
-    ss >> heartBeat2;
-    const HB::timestamp_t ts = heartBeat2.getTimeStamp();
-    std::tm* tempo = std::localtime(&ts);
-    std::cout << heartBeat2.getMemberID() << "  " << std::put_time(tempo,"%d-%m-%Y < %H:%M:%S >") << std::endl;
-*/
     return 0;
 }

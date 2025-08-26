@@ -34,22 +34,12 @@ void dsClient::operator()()
         std::string buffer;
         while (true)
         {
-            // Obtem timestamp como número de milissegundos desde epoch
-            auto now = std::chrono::high_resolution_clock::now();
-            auto time_stamp = std::chrono::duration_cast<std::chrono::seconds>(
-                              now.time_since_epoch()).count();
-
-            std::time_t t = static_cast<std::time_t>(time_stamp);
-
             HB::memberID id = std::to_string(socket.local_endpoint().port());
             // put the data in the output stream ------------------------------------------
-
-            //oss << id << ' ';
-            //oss << std::put_time(std::localtime(&t), "%Y-%m-%d__%H:%M:%S") << ' ';
-            // escreve no buffer o conteudo do stream
             buffer.clear();
             std::ostringstream oss;
-            oss << _myID;
+            oss << socket.local_endpoint().address().to_string();
+            oss << ":" << socket.local_endpoint().port();
             buffer.append(oss.str());
             // send the raw data (it is a blocking mode)--MTU limits to 1472 bytes of payload--
             socket.send_to(boost::asio::buffer(buffer), multicast_endpoint);
