@@ -4,9 +4,19 @@ project(distributed_group VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PNAME dsmodule_cli)
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+list(APPEND CMAKE_CXX_FLAGS "-O0 -g")
 set(CMAKE_BUILD_TYPE Debug)
-set(BOOST_DIR /home/dev/commonlibs/boost_1_88_0)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Building for LINUX architecture...")
+    set(BOOST_DIR /home/dev/commonlibs/boost_1_88_0)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    message(STATUS "Building for APPLE architecture...")
+    set(BOOST_DIR /Users/mtqdev/commonlibs/boost_1_88_0)
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
+else()
+    message(STATUS "Compiling Error...")
+endif ()
 
 add_subdirectory(dsmodule_dir)
 
@@ -22,6 +32,7 @@ target_include_directories(${PNAME} PUBLIC dsmodule_dir/include)
 install(TARGETS ${PNAME}
     RUNTIME DESTINATION bin)
 
+if(NOT APPLE)
 # ---- Doxygen ----
 find_package(Doxygen REQUIRED)
 
@@ -47,3 +58,5 @@ add_custom_target(docs-clean
         COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_CURRENT_BINARY_DIR}/docs
         COMMENT "Limpando documentação..."
 )
+
+endif () #if NOT APPLE
