@@ -4,24 +4,31 @@ project(distributed_group VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PNAME dsmodule_cli)
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+list(APPEND CMAKE_CXX_FLAGS "-O0 -g")
 set(CMAKE_BUILD_TYPE Debug)
-set(BOOST_DIR /home/dev/commonlibs/boost_1_88_0)
+# Must to configure IDE to see the environment variables
+set(BOOST_DIR $ENV{BOOST_ROOT})
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS ":) Building for x86_64 architecture - identified")
+    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    message(STATUS ":) Building for APPLE arm64 architecture - identified")
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
+else()
+    message(FATAL_ERROR ":( Building did not identify the target architecture...")
+endif ()
 
 add_subdirectory(dsmodule_dir)
 
 add_executable(${PNAME} main.cpp)
 target_link_libraries(${PNAME} ds_module)
 
-
-# $BOOST_DIR set on top CMakelists.txt
-#target_include_directories(ds_module PUBLIC ${BOOST_DIR})
-
 target_include_directories(${PNAME} PUBLIC dsmodule_dir/include)
 
 install(TARGETS ${PNAME}
     RUNTIME DESTINATION bin)
 
+if(NOT APPLE)
 # ---- Doxygen ----
 find_package(Doxygen REQUIRED)
 
@@ -47,3 +54,5 @@ add_custom_target(docs-clean
         COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_CURRENT_BINARY_DIR}/docs
         COMMENT "Limpando documentação..."
 )
+
+endif () #if NOT APPLE

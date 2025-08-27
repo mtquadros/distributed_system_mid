@@ -5,8 +5,6 @@
 #include <ds/dsClient.hpp>
 #include <ds/dsServer.hpp>
 #include <iostream>
-#include <boost/asio.hpp>
-#include <mutex>
 #include <thread>
 
 #include "ds/heartBeat.hpp"
