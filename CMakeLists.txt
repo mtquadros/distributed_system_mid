@@ -7,7 +7,7 @@ set(PNAME dsmodule_cli)
 list(APPEND CMAKE_CXX_FLAGS "-O0 -g")
 set(CMAKE_BUILD_TYPE Debug)
 # Must to configure IDE to see the environment variables
-set(BOOST_DIR $ENV{BOOST_ROOT})
+set(BOOST_DIR $ENV{ROOT_BOOST})
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message(STATUS ":) Building for x86_64 architecture - identified")
     set(CMAKE_OSX_ARCHITECTURES "x86_64")
