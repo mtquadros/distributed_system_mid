@@ -6,26 +6,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PNAME dsmodule_cli)
 list(APPEND CMAKE_CXX_FLAGS "-O0 -g")
 set(CMAKE_BUILD_TYPE Debug)
+# Must to configure IDE to see the environment variables
+set(BOOST_DIR $ENV{BOOST_ROOT})
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    message(STATUS "Building for LINUX architecture...")
-    set(BOOST_DIR /home/dev/commonlibs/boost_1_88_0)
+    message(STATUS ":) Building for x86_64 architecture - identified")
     set(CMAKE_OSX_ARCHITECTURES "x86_64")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    message(STATUS "Building for APPLE architecture...")
-    set(BOOST_DIR /Users/mtqdev/commonlibs/boost_1_88_0)
+    message(STATUS ":) Building for APPLE arm64 architecture - identified")
     set(CMAKE_OSX_ARCHITECTURES "arm64")
 else()
-    message(STATUS "Compiling Error...")
+    message(FATAL_ERROR ":( Building did not identify the target architecture...")
 endif ()
 
 add_subdirectory(dsmodule_dir)
 
 add_executable(${PNAME} main.cpp)
 target_link_libraries(${PNAME} ds_module)
-
-
-# $BOOST_DIR set on top CMakelists.txt
-#target_include_directories(ds_module PUBLIC ${BOOST_DIR})
 
 target_include_directories(${PNAME} PUBLIC dsmodule_dir/include)
 

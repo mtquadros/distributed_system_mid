@@ -17,7 +17,7 @@ set_target_properties(ds_module PROPERTIES
         SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-# $BOOST_DIR set on top CMakelists.txt
+# $BOOST_ROOT set on top CMakelists.txt
 target_include_directories(ds_module
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
         PUBLIC ${BOOST_DIR}

@@ -6,12 +6,10 @@
 #define DEFINITIONS_H
 
 #include <fstream>
-
-// include headers that implement a archive in simple text format
 #include <boost/asio.hpp>
+// include headers that implement a archive in simple text format
 #include <map>
 #include <chrono>
-#include <mutex>
 
 
 /*!
@@ -41,7 +39,7 @@ namespace HB
 #    error "Missing #define REMOTE_DISTRIBUTED_SYSTEM directive to true or false"
 #endif
 
-    using timestamp_t  = time_t;
+    using timestamp_t  = std::time_t;
 
     using controlFlag   = int64_t;
 
