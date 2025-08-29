@@ -2,6 +2,7 @@
 // Created by dev on 26/07/25.
 //
 
+
 #include <iostream>
 #include <iomanip>
 #include <ds/manageTable.hpp>
@@ -42,6 +43,7 @@ void manageTable::operator()()
         }
         //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         showCursor();
+
     }
 }
 

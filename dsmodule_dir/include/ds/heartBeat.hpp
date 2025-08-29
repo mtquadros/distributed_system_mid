@@ -19,7 +19,6 @@ private:
     void setTimeStamp();
 
 public:
-    HeartBeat(){}; //used to prepare to receive a heartBeat from an input stream
     HeartBeat(std::string& id):_memberID(id){ setTimeStamp(); };
     HeartBeat(std::string&& id):_memberID(id){ setTimeStamp(); };
     ~HeartBeat() = default;
