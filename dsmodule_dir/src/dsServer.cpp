@@ -52,16 +52,11 @@ void dsServer::operator()()
             std::istringstream iss(data);
             iss >> heartbeat;
             std::stringstream tag;
-            std::unique_lock<std::shared_mutex> write(_mutex);
             tag.clear();
             tag << sender_endpoint.address().to_string();
             tag << ":" << sender_endpoint.port();
-            if (_tableOfAlive.contains(tag.str()))
-            {
-                write.unlock();
-                throw std::logic_error(">>> There are more than one host with same ID.");
-            }
-           _tableOfAlive[tag.str()] = heartbeat.getTimeStamp();
+            std::unique_lock<std::shared_mutex> write(_mutex);
+            _tableOfAlive[tag.str()] = heartbeat.getTimeStamp();
             write.unlock();
             // -----------------------------------------------------------------
         }

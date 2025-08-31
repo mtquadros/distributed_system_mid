@@ -38,6 +38,7 @@ namespace HB
 #else
 #    error "Missing #define REMOTE_DISTRIBUTED_SYSTEM directive to true or false"
 #endif
+
     using logical_clock = unsigned long long int;
 
     using timestamp_t  = std::time_t;

@@ -7,6 +7,7 @@ target_sources(ds_module PUBLIC src/dsClient.cpp
                                 src/dsServer.cpp
                                 src/manageTable.cpp
                                 src/heartBeat.cpp
+                                src/message.cpp
 )
 
 set_target_properties(ds_module PROPERTIES

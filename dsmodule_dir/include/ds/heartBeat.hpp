@@ -19,6 +19,7 @@ private:
     void setTimeStamp();
 
 public:
+    HeartBeat(){};
     HeartBeat(std::string& id):_memberID(id){ setTimeStamp(); };
     HeartBeat(std::string&& id):_memberID(id){ setTimeStamp(); };
     ~HeartBeat() = default;
